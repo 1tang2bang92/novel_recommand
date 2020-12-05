@@ -28,18 +28,18 @@ build server : github action -> local server
 ## [robots.txt](https://namu.wiki/w/robots.txt)
 2020/12/06 기준 각 사이트에서 크롤링 가능한 페이지인지 확인함.
 * [naver series](https://series.naver.com/robots.txt)
->User-agent: *
->Disallow: /
->Allow: /$
->Allow: /ebook/home.nhn
->Allow: /comic/home.nhn
->Allow: /novel/home.nhn
->Allow: /movie/home.nhn
->Allow: /broadcasting/home.nhn
->Allow: /ebook/detail.nhn
->Allow: /comic/detail.nhn
->Allow: /novel/detail.nhn
->Allow: /series
+> User-agent: *
+> Disallow: /
+> Allow: /$
+> Allow: /ebook/home.nhn
+> Allow: /comic/home.nhn
+> Allow: /novel/home.nhn
+> Allow: /movie/home.nhn
+> Allow: /broadcasting/home.nhn
+> Allow: /ebook/detail.nhn
+> Allow: /comic/detail.nhn
+> Allow: /novel/detail.nhn
+> Allow: /series
 * [joara](http://www.joara.com/robots.txt)
 >User-agent: *
 >Disallow: /config/
