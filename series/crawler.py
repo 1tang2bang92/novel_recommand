@@ -1,7 +1,12 @@
 from selenium import webdriver
 from urllib.parse import urlparse
 
-get_title = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/h2').text
+def get_title(driver):
+    title = driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/h2').text
+    if title.endswith(']'):
+        return ''.join(title.split()[:-1])
+    return title
+
 get_author = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[3]/a').text
 get_genre = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[2]/span').text
 get_last_serial_day = lambda driver: driver.find_element_by_xpath('//*[@id="volumeList"]/tr[1]/td[1]/div/em').text
