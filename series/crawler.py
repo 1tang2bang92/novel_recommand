@@ -1,6 +1,13 @@
 from selenium import webdriver
 from urllib.parse import urlparse
 
+get_title = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/h2').text
+get_author = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[3]/a').text
+get_genre = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[2]/span').text
+get_last_serial_day = lambda driver: driver.find_element_by_xpath('//*[@id="volumeList"]/tr[1]/td[1]/div/em').text
+get_total_serial_count = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/h5[@class="end_total_episode"]/strong').text
+get_rating = lambda driver: driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/div[@class="score_area"]/em').text
+
 class Crawler:
     driver_path = r'c:\chromedriver.exe'
     all_genre_base_url = r'https://series.naver.com/novel/categoryProductList.nhn?categoryTypeCode=all&page='
@@ -31,11 +38,11 @@ class Crawler:
             driver.get(self.novel_base_url + id)
             driver.implicitly_wait(10)
 
-            title = driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/h2').text
-            author = driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[3]/a').text
-            genre = driver.find_element_by_xpath('//*[@id="content"]/ul[1]/li/ul/li[2]/span').text
-            last_serial_day = driver.find_element_by_xpath('//*[@id="volumeList"]/tr[1]/td[1]/div/em').text
-            total_serial_count = driver.find_element_by_xpath('//*[@id="content"]/h5[@class="end_total_episode"]/strong').text
-            rating = driver.find_element_by_xpath('//*[@id="content"]/div[@class="end_head"]/div[@class="score_area"]/em').text
+            title = get_title(driver)
+            author = get_author(driver)
+            genre = get_genre(driver)
+            last_serial_day = get_last_serial_day(driver)
+            total_serial_count = get_total_serial_count(driver)
+            rating = get_rating(driver)
 
             print(title, author, genre, last_serial_day, total_serial_count, rating)
