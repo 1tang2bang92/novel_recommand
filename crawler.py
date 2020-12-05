@@ -9,7 +9,6 @@ cur = connect .cursor()
 sql = "select * from testTable"
 cur.execute(sql)
 
-
 # DB결과를 모두 가져올 때 사용
 rows = cur.fetchall()
 
