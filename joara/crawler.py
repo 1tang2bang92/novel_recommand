@@ -33,12 +33,14 @@ def getGenre(soup: BeautifulSoup):
 class Crawler:
     baseurl = 'http://www.joara.com'
     url = 'http://www.joara.com/literature/view/book_list.html?page_no='
+    page = 'page_no='
+    genre = 'sl_category='
 
     def __init__(self):
         self.list = []
 
-    def crawl(self, num):
-        soup = getSoup(self.url + str(num))
+    def crawl(self, num, genre):
+        soup = getSoup(self.url + str(num) + '&' + self.genre + genre)
         novelList = getList(soup)
         for x in novelList:
             #print(x)
