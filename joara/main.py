@@ -6,4 +6,4 @@ genres = ['fantasy', 'love', 'rofan', 'muhyep', 'fusion', 'game', 'history', 'sp
 
 if __name__ == "__main__":
     for x in range(1, 2):
-        Crawler().crawl(4)
+        Crawler().crawl(x)
