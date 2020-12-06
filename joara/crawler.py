@@ -47,6 +47,9 @@ def getView(soup: BeautifulSoup):
 def getRecommand(soup: BeautifulSoup):
     return int(re.sub(r'[^0-9]', '',soup.parent.next_sibling.next_sibling.select_one('.btnR').text.split(':')[3].replace('\\[^0-9]\\','')))
     
+def getLastDate(soup: BeautifulSoup):
+    return soup.select('span')[4].text.strip().split(' ')[0]
+
 def getNum(soup: BeautifulSoup):
     return int(re.sub(r'[^0-9]', '',soup.select_one('a').next_sibling))
 
@@ -103,8 +106,7 @@ class Crawler:
             return elem.text.strip().replace('/', '.')
         else:
             elem = self.wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, '.info .date:last-child')))[0]
-            return re.sub('[^0-9.]', '', elem.text)
-            
+            return re.sub('[^0-9.]', '', elem.text)            
 
     def crawl(self, num):
         soup = getSoup(self.url + '?' + self.page + str(num))
@@ -126,9 +128,7 @@ class Crawler:
             recommand = getRecommand(elem)
             size = self.getSize(work)
             startDate = self.getStartDate(work)
+            lastDate = getLastDate(elem)
 
-            print(work, title, author, genre,view, recommand, size, startDate)
-
-            #num = getNum(soup)
-            #print(title)
-            time.sleep(1)
+            print(work, title, author, genre,view, recommand, size, startDate, lastDate)
+            time.sleep(0)
