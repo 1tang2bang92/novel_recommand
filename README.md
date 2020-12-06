@@ -10,11 +10,11 @@
 [네이버 시리즈](https://series.naver.com/novel), [조아라](https://joara.com/main.html), [문피아](https://novel.munpia.com)를 크롤링해 사용자에게 맞는 소설을 추천하는 프로그램입니다.
 
 ## 환경
-server : centos 8 + podman + k8s
-db : maria db
-backend : python + Django
-frontend : flutter
-build server : github action -> local server
+server : centos 8 + podman + k8s<br>
+db : maria db<br>
+backend : python + Django<br>
+frontend : flutter<br>
+build server : github action -> local server<br>
 
 ## 설계 구조
 
