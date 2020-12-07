@@ -10,6 +10,8 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+p = re.compile('book_code=([0-9]+)')
+
 def getSoup(url: str):
     res = requests.get(url)
     return BeautifulSoup(res.text, 'html.parser')
@@ -31,6 +33,9 @@ def getWork(url):
         return 'Romance'
     elif 'finish' in url:
         return 'Finish'
+
+def getBookCode(url):
+    return p.search(url).group(1)
     
 def getTitle(soup: BeautifulSoup):
     return soup.select_one('a').text.strip()
@@ -39,7 +44,7 @@ def getAuthor(soup: BeautifulSoup):
     return soup.select_one('.member_nickname').text.strip()
 
 def getGenre(soup: BeautifulSoup):
-    return list(map(lambda x: x[:-1], soup.select_one('.cate').text.split('[')))[1:]
+    return list(set(list(map(lambda x: x[:-1], soup.select_one('.cate').text.split('[')))[1:]))
 
 def getView(soup: BeautifulSoup):
     return int(re.sub(r'[^0-9]', '',soup.parent.next_sibling.next_sibling.select_one('.btnR').text.split(':')[1].replace('\\[^0-9]\\','')))
@@ -109,6 +114,7 @@ class Crawler:
             return re.sub('[^0-9.]', '', elem.text)            
 
     def crawl(self, num):
+        result = []
         soup = getSoup(self.url + '?' + self.page + str(num))
         novelList = getList(soup)
         for elem in novelList:
@@ -121,6 +127,7 @@ class Crawler:
 
             work = getWork(url)
             
+            bookCode = getBookCode(url)
             title = self.getTitle(work)
             author = getAuthor(elem)
             genre = getGenre(elem)
@@ -130,5 +137,6 @@ class Crawler:
             startDate = self.getStartDate(work)
             lastDate = getLastDate(elem)
 
-            print(work, title, author, genre,view, recommand, size, startDate, lastDate)
-            time.sleep(0)
+            result.append((bookCode, work, title, author, genre,view, recommand, size, startDate, lastDate))
+            print(bookCode,work, title, author, genre,view, recommand, size, startDate, lastDate)
+        return result
