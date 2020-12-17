@@ -21,6 +21,17 @@ class DB(object):
         self.conn = mariadb.connect(host=host, port=port, username=username, password=password, database=db)
 
     def insertData(self, table, data):
-        sql = f'INSERT INTO {table} () VALUES ()'
+        sql = f'INSERT INTO {table} (id, title, author, startDate, lastDate, view) VALUES (? ? ? ? ? ? ? ? ?)'
         cursor = self.conn.cursor()
         cursor.excute(sql, data)
+
+    def updateData(self, table, data):
+        sql = f'UPDATE SET {table} id=? title=? author=? startDate=? lastDate=? view=?'
+        cursor = self.conn.cursor()
+        cursor.excute(sql, data * 2)
+
+    def insertOrUpdateData(self, table, data):
+        sql = f'INSERT INTO {table} (id, title, author, startDate, lastDate, view) VALUES (? ? ? ? ? ? ? ? ?)'
+        sql += ' ON DUPLICATE KEY UPDATE id=? title=? author=? startDate=? lastDate=? view=?'
+        cursor = self.conn.cursor()
+        cursor.excute(sql, data * 2)
