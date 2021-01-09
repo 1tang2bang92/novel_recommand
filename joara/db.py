@@ -17,21 +17,24 @@ class DB(object):
         username = dbconf['User']
         password = dbconf['Password']
         db = dbconf['DB']
-
-        self.conn = mariadb.connect(host=host, port=port, username=username, password=password, database=db)
+        conn = mariadb.connect(host=host, port=port, username=username, password=password, database=db)
+        self.conn = conn
+        self.cursor = conn.cursor()
 
     def insertData(self, table, data):
-        sql = f'INSERT INTO {table} (id, title, author, startDate, lastDate, view) VALUES (? ? ? ? ? ? ? ? ?)'
-        cursor = self.conn.cursor()
-        cursor.excute(sql, data)
+        sql = f'INSERT INTO {table} (bookid, title, author, genre, view, recommand, size, start_date, last_date) VALUES {data}'
+        self.cursor.execute(sql)
+        self.conn.commit()
 
     def updateData(self, table, data):
         sql = f'UPDATE SET {table} id=? title=? author=? startDate=? lastDate=? view=?'
-        cursor = self.conn.cursor()
-        cursor.excute(sql, data * 2)
+        cursor = self.cursor
+        cursor.execute(sql, data * 2)
+        self.conn.commit()
 
     def insertOrUpdateData(self, table, data):
         sql = f'INSERT INTO {table} (id, title, author, startDate, lastDate, view) VALUES (? ? ? ? ? ? ? ? ?)'
         sql += ' ON DUPLICATE KEY UPDATE id=? title=? author=? startDate=? lastDate=? view=?'
-        cursor = self.conn.cursor()
-        cursor.excute(sql, data * 2)
+        cursor = self.cursor
+        cursor.execute(sql, data * 2)
+        self.conn.commit()

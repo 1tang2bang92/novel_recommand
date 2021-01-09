@@ -4,14 +4,13 @@ import re
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 p = re.compile('book_code=([0-9]+)')
-
 
 def getSoup(url: str):
     res = requests.get(url)
@@ -52,7 +51,7 @@ def getAuthor(soup: BeautifulSoup):
 
 
 def getGenre(soup: BeautifulSoup):
-    return list(set(list(map(lambda x: x[:-1], soup.select_one('.cate').text.split('[')))[1:]))
+    return " ".join(list(set(list(map(lambda x: x[:-1], soup.select_one('.cate').text.split('[')))[1:])))
 
 
 def getView(soup: BeautifulSoup):
@@ -72,13 +71,15 @@ def getNum(soup: BeautifulSoup):
 
 
 class Crawler:
-    url = 'http://www.joara.com/literature/view/book_list.html'
-    page = 'page_no='
+    url = 'http://www.joara.com/literature/view/book_list.html?sl_orderby=cnt_page_read&page_no='
 
     def __init__(self):
         self.list = []
         options = Options()
-        options.set_headless(True)
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--disable-gpu')
         self.driver = webdriver.Chrome(options=options)
         self.wait = WebDriverWait(self.driver, 10)
 
@@ -123,11 +124,11 @@ class Crawler:
             return re.sub('[^0-9.]', '', elem.text.split('/')[1])
         elif work == 'Premium':
             elem = self.wait.until(EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, '.tbl_work tbody tr:last-child td:nth-child(4) a')))[0]
+                (By.CSS_SELECTOR, '.tbl_work > tbody > tr:last-child > td > a')))[2]
             return elem.text.strip().replace('/', '.')
         elif work == 'Finish':
             elem = self.wait.until(EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, '.tbl_work tbody tr:last-child td:nth-child(4) a')))[0]
+                (By.CSS_SELECTOR, '.tbl_work > tbody > tr:last-child > td > a')))[2]
             return elem.text.strip().replace('/', '.')
         else:
             elem = self.wait.until(EC.presence_of_all_elements_located(
@@ -136,7 +137,7 @@ class Crawler:
 
     def crawl(self, num):
         result = []
-        soup = getSoup(self.url + '?' + self.page + str(num))
+        soup = getSoup(self.url + str(num))
         novelList = getList(soup)
         for elem in novelList:
             url = getUrl(elem)
@@ -154,7 +155,7 @@ class Crawler:
             genre = getGenre(elem)
             view = getView(elem)
             recommand = getRecommand(elem)
-            size = self.getSize(work)
+            size = int(self.getSize(work))
             startDate = self.getStartDate(work)
             lastDate = getLastDate(elem)
 
